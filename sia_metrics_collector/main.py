@@ -32,8 +32,8 @@ def main(args):
 def _poll_forever(frequency, csv_file):
     builder = state.make_builder()
     csv_serializer = serialize.CsvSerializer(csv_file)
+    next_poll_time = datetime.datetime.utcnow()
     for i in xrange(1000000000):
-        poll_start = datetime.datetime.utcnow()
         s = builder.build()
 
         csv_serializer.write_state(s)
@@ -41,7 +41,8 @@ def _poll_forever(frequency, csv_file):
         if i % 100 == 0:
             print serialize.console_header()
         print serialize.as_console_string(s)
-        _wait_until(poll_start + datetime.timedelta(seconds=frequency))
+        next_poll_time += datetime.timedelta(seconds=frequency)
+        _wait_until(next_poll_time)
 
 
 def _wait_until(timestamp):
