@@ -17,7 +17,7 @@ class CsvSerializerTest(unittest.TestCase):
             ('timestamp,contract_count,file_count,uploads_in_progress_count,'
              'uploaded_bytes,contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\r\n'), mock_file.getvalue())
+             'wallet_siacoin_balance,api_latency\n'), mock_file.getvalue())
 
     def test_writes_state_to_file(self):
         mock_file = io.BytesIO()
@@ -42,8 +42,8 @@ class CsvSerializerTest(unittest.TestCase):
             ('timestamp,contract_count,file_count,uploads_in_progress_count,'
              'uploaded_bytes,contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\r\n'
-             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\r\n'),
+             'wallet_siacoin_balance,api_latency\n'
+             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\n'),
             mock_file.getvalue())
 
     def test_appends_to_existing_file(self):
@@ -53,8 +53,8 @@ class CsvSerializerTest(unittest.TestCase):
             ('timestamp,contract_count,file_count,uploads_in_progress_count,'
              'uploaded_bytes,contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\r\n'
-             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\r\n'))
+             'wallet_siacoin_balance,api_latency\n'
+             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\n'))
 
         serializer = serialize.CsvSerializer(mock_file)
         serializer.write_state(
@@ -76,7 +76,7 @@ class CsvSerializerTest(unittest.TestCase):
             ('timestamp,contract_count,file_count,uploads_in_progress_count,'
              'uploaded_bytes,contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\r\n'
-             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\r\n'
-             '2018-02-11T16:05:07,6,4,3,901,26,3,36,1,101,76,6.0\r\n'),
+             'wallet_siacoin_balance,api_latency\n'
+             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\n'
+             '2018-02-11T16:05:07,6,4,3,901,26,3,36,1,101,76,6.0\n'),
             mock_file.getvalue())

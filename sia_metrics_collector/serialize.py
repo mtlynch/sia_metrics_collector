@@ -28,7 +28,8 @@ class CsvSerializer(object):
                 'remaining_renter_funds',
                 'wallet_siacoin_balance',
                 'api_latency',
-            ])
+            ],
+            lineterminator='\n')
         if is_empty_file:
             self._csv_writer.writeheader()
 
