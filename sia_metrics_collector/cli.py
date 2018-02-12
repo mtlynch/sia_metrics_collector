@@ -7,8 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 def print_header():
-    print('  time   latency uploaded  contracts    store $  u/l $   d/l $ \n'
-          '-------- ------- -------- ------------- -------- ------- -------')
+    print """
+time     latency uploaded #c  tot $     fees $    store $   u/l $     d/l $
+-------- ------- -------- --- --------- --------- --------- --------- ---------
+""".strip()
 
 
 def print_state(state):
@@ -21,8 +23,9 @@ def print_state(state):
 
 def _make_console_string(state):
     return ('{timestamp} {api_latency:5d}ms {uploaded_bytes}'
-            ' {contract_fee_spending}/{contract_count}'
+            ' {contract_count}'
             ' {total_contract_spending}'
+            ' {contract_fee_spending}'
             ' {storage_spending} {upload_spending} {download_spending}').format(
                 timestamp=_format_timestamp(state),
                 api_latency=int(state.api_latency),
@@ -43,34 +46,29 @@ def _format_timestamp(state):
            ).strftime('%H:%M:%S')
 
 
-def _hastings_to_siacoins(hastings):
-    if hastings is None:
-        return None
-    return hastings * pow(10, -24)
-
-
 def _format_hastings(hastings):
     if hastings is None:
         return '  -  '
-    sc = _hastings_to_siacoins(hastings)
-    unit_pairs = [(10, 'KS'), (1, 'SC'), (-10, 'mS')]
+    unit_pairs = [(-27, 'KS'), (-24, 'SC'), (-21, 'mS')]
     for magnitude, suffix in unit_pairs:
-        if sc > pow(2, magnitude):
-            return '%#03.3f%s' % ((float(sc) / pow(2, magnitude)), suffix)
-    return '%#03.1fSC' % sc
+        if float(hastings) * pow(10, magnitude) >= 1.0:
+            return ('%3.3f%s' % ((float(hastings) * pow(10, magnitude)),
+                                 suffix)).rjust(9)
+    return '0SC'.rjust(9)
 
 
 def _format_contract_count(contract_count):
     if contract_count is None:
         return '-  '
-    return ('%d' % contract_count).ljust(3)
+    return ('%d' % contract_count).rjust(3)
 
 
 def _format_bytes(b):
     if b is None:
         return '  - '
-    unit_pairs = [(40, 'T'), (30, 'G'), (20, 'M'), (10, 'K')]
+    unit_pairs = [(12, 'T'), (9, 'G'), (6, 'M'), (3, 'K'), (0, 'b')]
     for magnitude, suffix in unit_pairs:
-        if b > pow(2, magnitude):
-            return '%#03.3f%s' % ((float(b) / pow(2, magnitude)), suffix)
-    return '%db' % b
+        if b >= pow(10, magnitude):
+            return ('%3.3f%s' % ((float(b) / pow(10, magnitude)),
+                                 suffix)).rjust(8)
+    return '0'.rjust(8)
