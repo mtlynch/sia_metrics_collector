@@ -32,10 +32,14 @@ def main(args):
 def _poll_forever(frequency, csv_file):
     builder = state.make_builder()
     csv_serializer = serialize.CsvSerializer(csv_file)
-    while True:
+    for i in range(100000000000000):
         poll_start = datetime.datetime.utcnow()
         s = builder.build()
+
         csv_serializer.write_state(s)
+        # Print header every 100 lines.
+        if i % 100 == 0:
+            print serialize.console_header()
         print serialize.as_console_string(s)
         _wait_until(poll_start + datetime.timedelta(seconds=frequency))
 
