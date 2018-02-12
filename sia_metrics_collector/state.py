@@ -26,6 +26,7 @@ class SiaState(object):
                  contract_count=None,
                  total_contract_size=None,
                  file_count=None,
+                 total_file_bytes=None,
                  uploads_in_progress_count=None,
                  uploaded_bytes=None,
                  total_contract_spending=None,
@@ -46,6 +47,8 @@ class SiaState(object):
                 sources).
             file_count: Number of files known to Sia (either partially or
                 fully uploaded).
+            total_file_bytes: Total size of all files files known to Sia. Not
+                all bytes have necessarily been uploaded to Sia yet.
             uploads_in_progress_count: Number of uploads currently in progress.
             uploaded_bytes: Total number of bytes that have been uploaded
                 across all files.
@@ -68,6 +71,7 @@ class SiaState(object):
         self.contract_count = contract_count
         self.total_contract_size = total_contract_size
         self.file_count = file_count
+        self.total_file_bytes = total_file_bytes
         self.uploads_in_progress_count = uploads_in_progress_count
         self.uploaded_bytes = uploaded_bytes
         self.total_contract_spending = total_contract_spending
@@ -85,6 +89,7 @@ class SiaState(object):
             (self.contract_count == other.contract_count) and
             (self.total_contract_size == other.total_contract_size) and
             (self.file_count == other.file_count) and
+            (self.total_file_bytes == other.total_file_bytes) and
             (self.uploads_in_progress_count == other.uploads_in_progress_count)
             and (self.uploaded_bytes == other.uploaded_bytes) and
             (self.total_contract_spending == other.total_contract_spending) and
@@ -100,36 +105,25 @@ class SiaState(object):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return json.dumps({
-            'timestamp':
-            self.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
-            'contract_count':
-            self.contract_count,
-            'total_contract_size':
-            self.total_contract_size,
-            'file_count':
-            self.file_count,
-            'uploads_in_progress_count':
-            self.uploads_in_progress_count,
-            'uploaded_bytes':
-            self.uploaded_bytes,
-            'total_contract_spending':
-            self.total_contract_spending,
-            'contract_fee_spending':
-            self.contract_fee_spending,
-            'storage_spending':
-            self.storage_spending,
-            'upload_spending':
-            self.upload_spending,
-            'download_spending':
-            self.download_spending,
-            'remaining_renter_funds':
-            self.remaining_renter_funds,
-            'wallet_siacoin_balance':
-            self.wallet_siacoin_balance,
-            'api_latency':
-            self.api_latency,
-        })
+        as_dict = {
+            'contract_count': self.contract_count,
+            'total_contract_size': self.total_contract_size,
+            'file_count': self.file_count,
+            'total_file_bytes': self.total_file_bytes,
+            'uploads_in_progress_count': self.uploads_in_progress_count,
+            'uploaded_bytes': self.uploaded_bytes,
+            'total_contract_spending': self.total_contract_spending,
+            'contract_fee_spending': self.contract_fee_spending,
+            'storage_spending': self.storage_spending,
+            'upload_spending': self.upload_spending,
+            'download_spending': self.download_spending,
+            'remaining_renter_funds': self.remaining_renter_funds,
+            'wallet_siacoin_balance': self.wallet_siacoin_balance,
+            'api_latency': self.api_latency,
+        }
+        if self.timestamp:
+            as_dict['timestamp'] = self.timestamp.strftime('%Y-%m-%dT%H:%M:%S')
+        return json.dumps(as_dict)
 
 
 class Builder(object):
@@ -198,13 +192,15 @@ class Builder(object):
                          json.dumps(response))
             return
         files = response[u'files']
+        state.file_count = 0
+        state.total_file_bytes = 0
         state.uploaded_bytes = 0
         state.uploads_in_progress_count = 0
         if not files:
-            state.file_count = 0
             return
-        state.file_count = len(files)
         for f in files:
+            state.file_count += 1
+            state.total_file_bytes += long(f[u'filesize'])
             state.uploaded_bytes += f[u'uploadedbytes']
             if f[u'uploadprogress'] < 100:
                 state.uploads_in_progress_count += 1
