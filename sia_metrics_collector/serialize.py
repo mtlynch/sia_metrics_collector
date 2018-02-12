@@ -59,10 +59,11 @@ def _state_to_dict(state):
 
 
 def as_console_string(state):
-    return ('{timestamp} {uploaded_bytes}'
+    return ('{timestamp} {api_latency:5d}ms {uploaded_bytes}'
             ' {contract_fee_spending}/{contract_count}'
             ' {storage_spending} {upload_spending} {download_spending}').format(
                 timestamp=state.timestamp.strftime('%H:%M:%S'),
+                api_latency=int(state.api_latency),
                 uploaded_bytes=_format_bytes(state.uploaded_bytes),
                 contract_fee_spending=_format_hastings(
                     state.contract_fee_spending),
