@@ -24,7 +24,8 @@ class SiaState(object):
                  upload_spending=None,
                  download_spending=None,
                  remaining_renter_funds=None,
-                 wallet_siacoin_balance=None):
+                 wallet_siacoin_balance=None,
+                 api_latency=None):
         """Creates a new SiaState instance.
 
         Args:
@@ -45,6 +46,8 @@ class SiaState(object):
                 download bandwidth.
             wallet_siacoin_balance: Current wallet balance of Siacoins (in
                 hastings).
+            api_latency: Time (in milliseconds) it took for Sia to respond to
+                all API calls.
         """
         self.timestamp = timestamp
         self.contract_count = contract_count
@@ -57,6 +60,7 @@ class SiaState(object):
         self.download_spending = download_spending
         self.remaining_renter_funds = remaining_renter_funds
         self.wallet_siacoin_balance = wallet_siacoin_balance
+        self.api_latency = api_latency
 
     def __eq__(self, other):
         return (
@@ -70,7 +74,8 @@ class SiaState(object):
             (self.upload_spending == other.upload_spending) and
             (self.download_spending == other.download_spending) and
             (self.remaining_renter_funds == other.remaining_renter_funds) and
-            (self.wallet_siacoin_balance == other.wallet_siacoin_balance))
+            (self.wallet_siacoin_balance == other.wallet_siacoin_balance) and
+            (self.api_latency == other.api_latency))
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -99,6 +104,8 @@ class SiaState(object):
             self.remaining_renter_funds,
             'wallet_siacoin_balance':
             self.wallet_siacoin_balance,
+            'api_latency':
+            self.api_latency,
         })
 
 
@@ -118,6 +125,7 @@ class Builder(object):
     def build(self):
         """Builds a SiaState object representing the current state of Sia."""
         state = SiaState()
+        queries_start_time = self._time_fn()
         state_population_fns = (self._populate_contract_metrics,
                                 self._populate_file_metrics,
                                 self._populate_wallet_metrics,
@@ -129,6 +137,8 @@ class Builder(object):
                 logging.error('Error when calling %s: %s', fn.__name__,
                               e.message)
                 continue
+        state.api_latency = (
+            self._time_fn() - queries_start_time).total_seconds() * 1000.0
         return state
 
     def _populate_timestamp(self, state):
