@@ -92,8 +92,8 @@ def _format_hastings(hastings):
 
 def _format_contract_count(contract_count):
     if not contract_count:
-        return ' - '
-    return '%3d' % contract_count
+        return '-  '
+    return ('%d' % contract_count).ljust(3)
 
 
 def _format_bytes(b):
