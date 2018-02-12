@@ -22,9 +22,11 @@ class CsvSerializer(object):
             fieldnames=[
                 'timestamp',
                 'contract_count',
+                'total_contract_size',
                 'file_count',
                 'uploads_in_progress_count',
                 'uploaded_bytes',
+                'total_contract_spending',
                 'contract_fee_spending',
                 'storage_spending',
                 'upload_spending',
@@ -54,9 +56,11 @@ def _state_to_dict(state):
     return {
         'timestamp': state.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
         'contract_count': state.contract_count,
+        'total_contract_size': state.total_contract_size,
         'file_count': state.file_count,
         'uploads_in_progress_count': state.uploads_in_progress_count,
         'uploaded_bytes': state.uploaded_bytes,
+        'total_contract_spending': state.total_contract_spending,
         'contract_fee_spending': state.contract_fee_spending,
         'storage_spending': state.storage_spending,
         'upload_spending': state.upload_spending,
