@@ -95,7 +95,7 @@ def _format_hastings(hastings):
     unit_pairs = [(10, 'KS'), (1, 'SC'), (-10, 'mS')]
     for magnitude, suffix in unit_pairs:
         if sc > pow(2, magnitude):
-            return '%#03.1f%s' % ((sc / pow(2, magnitude)), suffix)
+            return '%#03.3f%s' % ((float(sc) / pow(2, magnitude)), suffix)
     return '%#03.1fSC' % sc
 
 
