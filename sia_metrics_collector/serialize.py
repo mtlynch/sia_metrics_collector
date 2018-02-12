@@ -56,3 +56,50 @@ def _state_to_dict(state):
         'wallet_siacoin_balance': state.wallet_siacoin_balance,
         'api_latency': state.api_latency,
     }
+
+
+def as_console_string(state):
+    return ('{timestamp} {uploaded_bytes}'
+            ' {contract_fee_spending}/{contract_count}'
+            ' {storage_spending} {upload_spending} {download_spending}').format(
+                timestamp=state.timestamp.strftime('%H:%M:%S'),
+                uploaded_bytes=_format_bytes(state.uploaded_bytes),
+                contract_fee_spending=_format_hastings(
+                    state.contract_fee_spending),
+                contract_count=_format_contract_count(state.contract_count),
+                storage_spending=_format_hastings(state.storage_spending),
+                upload_spending=_format_hastings(state.upload_spending),
+                download_spending=_format_hastings(state.download_spending))
+
+
+def _hastings_to_siacoins(hastings):
+    if hastings is None:
+        return None
+    return hastings * pow(10, -24)
+
+
+def _format_hastings(hastings):
+    if not hastings:
+        return '  -  '
+    sc = _hastings_to_siacoins(hastings)
+    unit_pairs = [(10, 'KS'), (1, 'SC'), (-10, 'mS')]
+    for magnitude, suffix in unit_pairs:
+        if sc > pow(2, magnitude):
+            return '%#03.1f%s' % ((sc / pow(2, magnitude)), suffix)
+    return '%#03.1fSC' % sc
+
+
+def _format_contract_count(contract_count):
+    if not contract_count:
+        return ' - '
+    return '%3d' % contract_count
+
+
+def _format_bytes(b):
+    if not b:
+        return '  - '
+    unit_pairs = [(40, 'T'), (30, 'G'), (20, 'M'), (10, 'K')]
+    for magnitude, suffix in unit_pairs:
+        if b > pow(2, magnitude):
+            return '%#03.1f%s' % ((b / pow(2, magnitude)), suffix)
+    return '%db' % b
