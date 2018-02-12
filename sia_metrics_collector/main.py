@@ -32,7 +32,7 @@ def main(args):
 def _poll_forever(frequency, csv_file):
     builder = state.make_builder()
     csv_serializer = serialize.CsvSerializer(csv_file)
-    for i in range(100000000000000):
+    for i in xrange(1000000000):
         poll_start = datetime.datetime.utcnow()
         s = builder.build()
 
