@@ -22,6 +22,7 @@ def print_state(state):
 def _make_console_string(state):
     return ('{timestamp} {api_latency:5d}ms {uploaded_bytes}'
             ' {contract_fee_spending}/{contract_count}'
+            ' {total_contract_spending}'
             ' {storage_spending} {upload_spending} {download_spending}').format(
                 timestamp=_format_timestamp(state),
                 api_latency=int(state.api_latency),
@@ -29,6 +30,8 @@ def _make_console_string(state):
                 contract_fee_spending=_format_hastings(
                     state.contract_fee_spending),
                 contract_count=_format_contract_count(state.contract_count),
+                total_contract_spending=_format_hastings(
+                    state.total_contract_spending),
                 storage_spending=_format_hastings(state.storage_spending),
                 upload_spending=_format_hastings(state.upload_spending),
                 download_spending=_format_hastings(state.download_spending))

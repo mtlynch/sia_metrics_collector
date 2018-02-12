@@ -14,8 +14,9 @@ class CsvSerializerTest(unittest.TestCase):
         serialize.CsvSerializer(mock_file)
 
         self.assertEqual(
-            ('timestamp,contract_count,file_count,uploads_in_progress_count,'
-             'uploaded_bytes,contract_fee_spending,storage_spending,'
+            ('timestamp,contract_count,total_contract_size,file_count,'
+             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
+             'contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
              'wallet_siacoin_balance,api_latency\n'), mock_file.getvalue())
 
@@ -27,9 +28,11 @@ class CsvSerializerTest(unittest.TestCase):
             state.SiaState(
                 timestamp=datetime.datetime(2018, 2, 11, 16, 5, 2),
                 contract_count=5,
+                total_contract_size=9,
                 file_count=3,
                 uploads_in_progress_count=2,
                 uploaded_bytes=900,
+                total_contract_spending=65,
                 contract_fee_spending=25,
                 storage_spending=2,
                 upload_spending=35,
@@ -39,31 +42,35 @@ class CsvSerializerTest(unittest.TestCase):
                 api_latency=5.0))
 
         self.assertEqual(
-            ('timestamp,contract_count,file_count,uploads_in_progress_count,'
-             'uploaded_bytes,contract_fee_spending,storage_spending,'
+            ('timestamp,contract_count,total_contract_size,file_count,'
+             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
+             'contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
              'wallet_siacoin_balance,api_latency\n'
-             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\n'),
+             '2018-02-11T16:05:02,5,9,3,2,900,65,25,2,35,0,100,75,5.0\n'),
             mock_file.getvalue())
 
     def test_appends_to_existing_file(self):
         if True:
             return
         mock_file = io.BytesIO(
-            ('timestamp,contract_count,file_count,uploads_in_progress_count,'
-             'uploaded_bytes,contract_fee_spending,storage_spending,'
+            ('timestamp,contract_count,total_contract_size,file_count,'
+             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
+             'contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
              'wallet_siacoin_balance,api_latency\n'
-             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\n'))
+             '2018-02-11T16:05:02,5,9,3,2,900,65,25,2,35,0,100,75,5.0\n'))
 
         serializer = serialize.CsvSerializer(mock_file)
         serializer.write_state(
             state.SiaState(
                 timestamp=datetime.datetime(2018, 2, 11, 16, 5, 7),
                 contract_count=6,
+                total_contract_size=10,
                 file_count=4,
                 uploads_in_progress_count=3,
                 uploaded_bytes=901,
+                total_contract_spending=75,
                 contract_fee_spending=26,
                 storage_spending=3,
                 upload_spending=36,
@@ -73,10 +80,11 @@ class CsvSerializerTest(unittest.TestCase):
                 api_latency=6.0))
 
         self.assertEqual(
-            ('timestamp,contract_count,file_count,uploads_in_progress_count,'
-             'uploaded_bytes,contract_fee_spending,storage_spending,'
+            ('timestamp,contract_count,total_contract_size,file_count,'
+             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
+             'contract_fee_spending,storage_spending,'
              'upload_spending,download_spending,remaining_renter_funds,'
              'wallet_siacoin_balance,api_latency\n'
-             '2018-02-11T16:05:02,5,3,2,900,25,2,35,0,100,75,5.0\n'
-             '2018-02-11T16:05:07,6,4,3,901,26,3,36,1,101,76,6.0\n'),
+             '2018-02-11T16:05:02,5,9,3,2,900,65,25,2,35,0,100,75,5.0\n'
+             '2018-02-11T16:05:07,6,10,4,3,901,75,26,3,36,1,101,76,6.0\n'),
             mock_file.getvalue())
