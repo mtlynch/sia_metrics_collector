@@ -12,6 +12,7 @@ class CsvSerializer(object):
                 CsvSerializer will write a header row.
         """
         is_empty_file = _is_empty_file(csv_file)
+        self._csv_file = csv_file
         self._csv_writer = csv.DictWriter(
             csv_file,
             fieldnames=[
@@ -33,6 +34,7 @@ class CsvSerializer(object):
 
     def write_state(self, state):
         self._csv_writer.writerow(_state_to_dict(state))
+        self._csv_file.flush()
 
 
 def _is_empty_file(file_handle):
