@@ -25,7 +25,7 @@ def configure_logging():
 def main(args):
     configure_logging()
     logger.info('Started runnning')
-    with open(args.output_file, 'a') as csv_file:
+    with open(args.output_file, 'r+') as csv_file:
         _poll_forever(args.poll_frequency, csv_file)
 
 
