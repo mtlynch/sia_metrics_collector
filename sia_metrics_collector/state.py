@@ -1,3 +1,9 @@
+import logging
+import json
+
+logger = logging.getLogger(__name__)
+
+
 class SiaState(object):
     """Represents a set of Sia metrics at a moment in time.
 
@@ -68,3 +74,106 @@ class SiaState(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __repr__(self):
+        return json.dumps({
+            'timestamp':
+            self.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
+            'contract_count':
+            self.contract_count,
+            'file_count':
+            self.file_count,
+            'uploads_in_progress_count':
+            self.uploads_in_progress_count,
+            'uploaded_bytes':
+            self.uploaded_bytes,
+            'contract_fee_spending':
+            self.contract_fee_spending,
+            'storage_spending':
+            self.storage_spending,
+            'upload_spending':
+            self.upload_spending,
+            'download_spending':
+            self.download_spending,
+            'remaining_renter_funds':
+            self.remaining_renter_funds,
+            'wallet_siacoin_balance':
+            self.wallet_siacoin_balance,
+        })
+
+
+class Builder(object):
+    """Builds a SiaState object by querying the Sia API."""
+
+    def __init__(self, sia_api, time_fn):
+        """Creates a new Builder instance.
+
+        Args:
+            sia_api: An implementation of the Sia client API.
+            time_fn: A function that returns the current time.
+        """
+        self._sia_api = sia_api
+        self._time_fn = time_fn
+
+    def build(self):
+        """Builds a SiaState object representing the current state of Sia."""
+        state = SiaState()
+        state_population_fns = (self._populate_contract_metrics,
+                                self._populate_file_metrics,
+                                self._populate_wallet_metrics,
+                                self._populate_timestamp)
+        for fn in state_population_fns:
+            try:
+                fn(state)
+            except Exception as e:
+                logging.error('Error when calling %s: %s', fn.__name__,
+                              e.message)
+                continue
+        return state
+
+    def _populate_timestamp(self, state):
+        state.timestamp = self._time_fn()
+
+    def _populate_contract_metrics(self, state):
+        response = self._sia_api.get_renter_contracts()
+        if not response or not response.has_key(u'contracts'):
+            logger.error('Failed to query contracts information: %s',
+                         json.dumps(response))
+            return
+        contracts = response[u'contracts']
+        state.contract_count = len(contracts)
+        state.contract_fee_spending = 0
+        state.storage_spending = 0
+        state.upload_spending = 0
+        state.download_spending = 0
+        state.remaining_renter_funds = 0
+        for contract in contracts:
+            state.contract_fee_spending += long(contract[u'fees'])
+            state.storage_spending += long(contract[u'StorageSpending'])
+            state.upload_spending += long(contract[u'uploadspending'])
+            state.download_spending += long(contract[u'downloadspending'])
+            state.remaining_renter_funds += long(contract[u'renterfunds'])
+
+    def _populate_file_metrics(self, state):
+        response = self._sia_api.get_renter_files()
+        if not response or not response.has_key(u'files'):
+            logger.error('Failed to query file information: %s',
+                         json.dumps(response))
+            return
+        files = response[u'files']
+        state.file_count = len(files)
+        state.uploaded_bytes = 0
+        state.uploads_in_progress_count = 0
+        for f in files:
+            state.uploaded_bytes += f[u'uploadedbytes']
+            if f[u'uploadprogress'] < 100:
+                state.uploads_in_progress_count += 1
+
+    def _populate_wallet_metrics(self, state):
+        response = self._sia_api.get_wallet()
+        if not response or not response.has_key(u'confirmedsiacoinbalance'):
+            logger.error('Failed to query wallet information: %s',
+                         json.dumps(response))
+            return
+        state.wallet_siacoin_balance = long(
+            response[u'confirmedsiacoinbalance'])
