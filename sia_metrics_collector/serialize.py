@@ -12,7 +12,9 @@ class CsvSerializer(object):
 
         Args:
             csv_file: Output file to write CSV to. If file is empty,
-                CsvSerializer will write a header row.
+                CsvSerializer will write a header row. Caller must open the file
+                in either 'w' or 'r+' mode, as 'a' will not let us detect
+                whether to write a header on Windows.
         """
         _seek_to_end_of_file(csv_file)
         is_empty_file = _is_empty_file(csv_file)

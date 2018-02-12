@@ -3,6 +3,7 @@
 import argparse
 import datetime
 import logging
+import os
 import time
 
 import cli
@@ -26,8 +27,22 @@ def configure_logging():
 def main(args):
     configure_logging()
     logger.info('Started runnning')
-    with open(args.output_file, 'r+') as csv_file:
+    with _open_output_file(args.output_file) as csv_file:
         _poll_forever(args.poll_frequency, csv_file)
+
+
+def _open_output_file(output_path):
+    """Opens the output file and seeks to the end.
+
+    CsvWriter needs the mode to either be 'r+' or 'w'.
+
+    Args:
+        output_path: Path to output file to open or create.
+    """
+    if os.path.exists(output_path):
+        return open(output_path, 'r+')
+    else:
+        return open(output_path, 'w')
 
 
 def _poll_forever(frequency, csv_file):
