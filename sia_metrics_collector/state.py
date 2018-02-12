@@ -1,7 +1,15 @@
-import logging
+import datetime
 import json
+import logging
+
+import pysia
 
 logger = logging.getLogger(__name__)
+
+
+def make_builder():
+    """Makes a Builder using production mode defaults."""
+    return Builder(pysia.Sia(), datetime.datetime.utcnow)
 
 
 class SiaState(object):
