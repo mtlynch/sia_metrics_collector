@@ -1,4 +1,7 @@
 import csv
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Constant for Python's file seek() function.
 _FROM_FILE_END = 2
@@ -68,6 +71,14 @@ def _state_to_dict(state):
 
 
 def as_console_string(state):
+    try:
+        return _make_console_string(state)
+    except Exception as e:
+        logger.error('Failed to print to console: %s', e.message)
+        return ''
+
+
+def _make_console_string(state):
     return ('{timestamp} {api_latency:5d}ms {uploaded_bytes}'
             ' {contract_fee_spending}/{contract_count}'
             ' {storage_spending} {upload_spending} {download_spending}').format(
