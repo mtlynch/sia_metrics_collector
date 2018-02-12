@@ -1,4 +1,5 @@
 import csv
+import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -87,7 +88,7 @@ def _make_console_string(state):
     return ('{timestamp} {api_latency:5d}ms {uploaded_bytes}'
             ' {contract_fee_spending}/{contract_count}'
             ' {storage_spending} {upload_spending} {download_spending}').format(
-                timestamp=state.timestamp.strftime('%H:%M:%S'),
+                timestamp=_format_timestamp(state),
                 api_latency=int(state.api_latency),
                 uploaded_bytes=_format_bytes(state.uploaded_bytes),
                 contract_fee_spending=_format_hastings(
@@ -96,6 +97,12 @@ def _make_console_string(state):
                 storage_spending=_format_hastings(state.storage_spending),
                 upload_spending=_format_hastings(state.upload_spending),
                 download_spending=_format_hastings(state.download_spending))
+
+
+def _format_timestamp(state):
+    # Show start of poll, for more regular timestamps.
+    return (state.timestamp - datetime.timedelta(milliseconds=state.api_latency)
+           ).strftime('%H:%M:%S')
 
 
 def _hastings_to_siacoins(hastings):
