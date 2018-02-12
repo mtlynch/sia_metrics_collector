@@ -134,6 +134,33 @@ class StateBuilderTest(unittest.TestCase):
             state.SiaState(timestamp=_DUMMY_START_TIMESTAMP, api_latency=207.0),
             self.builder.build())
 
+    def test_builds_zero_metrics_when_files_is_None(self):
+        self.mock_sia_api.get_renter_contracts.return_value = {
+            u'message': u'dummy get_renter_contracts error'
+        }
+        # 'files' is set to None when there are zero files.
+        self.mock_sia_api.get_renter_files.return_value = {u'files': None}
+        self.mock_sia_api.get_wallet.return_value = {
+            u'message': u'dummy get_wallet error'
+        }
+
+        self.assertSiaStateEqual(
+            state.SiaState(
+                timestamp=_DUMMY_START_TIMESTAMP,
+                contract_count=None,
+                file_count=0,
+                total_contract_size=None,
+                uploads_in_progress_count=0,
+                uploaded_bytes=0,
+                total_contract_spending=None,
+                contract_fee_spending=None,
+                upload_spending=None,
+                download_spending=None,
+                remaining_renter_funds=None,
+                storage_spending=None,
+                wallet_siacoin_balance=None,
+                api_latency=207.0), self.builder.build())
+
     def test_builds_full_state_when_all_api_calls_return_successfully(self):
         self.mock_sia_api.get_renter_contracts.return_value = {
             u'contracts': [

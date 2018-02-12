@@ -198,9 +198,12 @@ class Builder(object):
                          json.dumps(response))
             return
         files = response[u'files']
-        state.file_count = len(files)
         state.uploaded_bytes = 0
         state.uploads_in_progress_count = 0
+        if not files:
+            state.file_count = 0
+            return
+        state.file_count = len(files)
         for f in files:
             state.uploaded_bytes += f[u'uploadedbytes']
             if f[u'uploadprogress'] < 100:
