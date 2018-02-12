@@ -5,6 +5,7 @@ import datetime
 import logging
 import time
 
+import cli
 import serialize
 import state
 
@@ -39,8 +40,8 @@ def _poll_forever(frequency, csv_file):
         csv_serializer.write_state(s)
         # Print header every 100 lines.
         if i % 100 == 0:
-            print serialize.console_header()
-        print serialize.as_console_string(s)
+            cli.print_header()
+        cli.print_state(s)
         next_poll_time += datetime.timedelta(seconds=frequency)
         _wait_until(next_poll_time)
 
