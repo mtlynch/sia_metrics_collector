@@ -70,6 +70,11 @@ def _state_to_dict(state):
     }
 
 
+def console_header():
+    return ('  time   latency uploaded  contracts    store $  u/l $   d/l $ \n'
+            '-------- ------- -------- ------------- -------- ------- -------')
+
+
 def as_console_string(state):
     try:
         return _make_console_string(state)
