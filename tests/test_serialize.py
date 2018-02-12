@@ -13,12 +13,21 @@ class CsvSerializerTest(unittest.TestCase):
 
         serialize.CsvSerializer(mock_file)
 
-        self.assertEqual(
-            ('timestamp,contract_count,total_contract_size,file_count,'
-             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
-             'contract_fee_spending,storage_spending,'
-             'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\n'), mock_file.getvalue())
+        self.assertEqual(('timestamp,'
+                          'contract_count,'
+                          'total_contract_size,'
+                          'file_count,'
+                          'total_file_bytes,'
+                          'uploads_in_progress_count,'
+                          'uploaded_bytes,'
+                          'total_contract_spending,'
+                          'contract_fee_spending,'
+                          'storage_spending,'
+                          'upload_spending,'
+                          'download_spending,'
+                          'remaining_renter_funds,'
+                          'wallet_siacoin_balance,'
+                          'api_latency\n'), mock_file.getvalue())
 
     def test_writes_state_to_file(self):
         mock_file = io.BytesIO()
@@ -30,6 +39,7 @@ class CsvSerializerTest(unittest.TestCase):
                 contract_count=5,
                 total_contract_size=9,
                 file_count=3,
+                total_file_bytes=4444,
                 uploads_in_progress_count=2,
                 uploaded_bytes=900,
                 total_contract_spending=65,
@@ -42,24 +52,44 @@ class CsvSerializerTest(unittest.TestCase):
                 api_latency=5.0))
 
         self.assertEqual(
-            ('timestamp,contract_count,total_contract_size,file_count,'
-             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
-             'contract_fee_spending,storage_spending,'
-             'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\n'
-             '2018-02-11T16:05:02,5,9,3,2,900,65,25,2,35,0,100,75,5.0\n'),
+            ('timestamp,'
+             'contract_count,'
+             'total_contract_size,'
+             'file_count,'
+             'total_file_bytes,'
+             'uploads_in_progress_count,'
+             'uploaded_bytes,'
+             'total_contract_spending,'
+             'contract_fee_spending,'
+             'storage_spending,'
+             'upload_spending,'
+             'download_spending,'
+             'remaining_renter_funds,'
+             'wallet_siacoin_balance,'
+             'api_latency\n'
+             '2018-02-11T16:05:02,5,9,3,4444,2,900,65,25,2,35,0,100,75,5.0\n'),
             mock_file.getvalue())
 
     def test_appends_to_existing_file(self):
         if True:
             return
         mock_file = io.BytesIO(
-            ('timestamp,contract_count,total_contract_size,file_count,'
-             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
-             'contract_fee_spending,storage_spending,'
-             'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\n'
-             '2018-02-11T16:05:02,5,9,3,2,900,65,25,2,35,0,100,75,5.0\n'))
+            ('timestamp,'
+             'contract_count,'
+             'total_contract_size,'
+             'file_count,'
+             'total_file_bytes,'
+             'uploads_in_progress_count,'
+             'uploaded_bytes,'
+             'total_contract_spending,'
+             'contract_fee_spending,'
+             'storage_spending,'
+             'upload_spending,'
+             'download_spending,'
+             'remaining_renter_funds,'
+             'wallet_siacoin_balance,'
+             'api_latency\n'
+             '2018-02-11T16:05:02,5,9,3,4444,2,900,65,25,2,35,0,100,75,5.0\n'))
 
         serializer = serialize.CsvSerializer(mock_file)
         serializer.write_state(
@@ -68,6 +98,7 @@ class CsvSerializerTest(unittest.TestCase):
                 contract_count=6,
                 total_contract_size=10,
                 file_count=4,
+                total_file_bytes=5555,
                 uploads_in_progress_count=3,
                 uploaded_bytes=901,
                 total_contract_spending=75,
@@ -80,11 +111,21 @@ class CsvSerializerTest(unittest.TestCase):
                 api_latency=6.0))
 
         self.assertEqual(
-            ('timestamp,contract_count,total_contract_size,file_count,'
-             'uploads_in_progress_count,uploaded_bytes,total_contract_spending,'
-             'contract_fee_spending,storage_spending,'
-             'upload_spending,download_spending,remaining_renter_funds,'
-             'wallet_siacoin_balance,api_latency\n'
-             '2018-02-11T16:05:02,5,9,3,2,900,65,25,2,35,0,100,75,5.0\n'
-             '2018-02-11T16:05:07,6,10,4,3,901,75,26,3,36,1,101,76,6.0\n'),
+            ('timestamp,'
+             'contract_count,'
+             'total_contract_size,'
+             'file_count,'
+             'total_file_bytes,'
+             'uploads_in_progress_count,'
+             'uploaded_bytes,'
+             'total_contract_spending,'
+             'contract_fee_spending,'
+             'storage_spending,'
+             'upload_spending,'
+             'download_spending,'
+             'remaining_renter_funds,'
+             'wallet_siacoin_balance,'
+             'api_latency\n'
+             '2018-02-11T16:05:02,5,9,3,4444,2,900,65,25,2,35,0,100,75,5.0\n'
+             '2018-02-11T16:05:07,6,10,4,5555,3,901,75,26,3,36,1,101,76,6.0\n'),
             mock_file.getvalue())
