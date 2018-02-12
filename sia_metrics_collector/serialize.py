@@ -105,7 +105,7 @@ def _hastings_to_siacoins(hastings):
 
 
 def _format_hastings(hastings):
-    if not hastings:
+    if hastings is None:
         return '  -  '
     sc = _hastings_to_siacoins(hastings)
     unit_pairs = [(10, 'KS'), (1, 'SC'), (-10, 'mS')]
@@ -116,13 +116,13 @@ def _format_hastings(hastings):
 
 
 def _format_contract_count(contract_count):
-    if not contract_count:
+    if contract_count is None:
         return '-  '
     return ('%d' % contract_count).ljust(3)
 
 
 def _format_bytes(b):
-    if not b:
+    if b is None:
         return '  - '
     unit_pairs = [(40, 'T'), (30, 'G'), (20, 'M'), (10, 'K')]
     for magnitude, suffix in unit_pairs:
