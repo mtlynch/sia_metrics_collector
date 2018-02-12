@@ -111,5 +111,5 @@ def _format_bytes(b):
     unit_pairs = [(40, 'T'), (30, 'G'), (20, 'M'), (10, 'K')]
     for magnitude, suffix in unit_pairs:
         if b > pow(2, magnitude):
-            return '%#03.3f%s' % ((b / pow(2, magnitude)), suffix)
+            return '%#03.3f%s' % ((float(b) / pow(2, magnitude)), suffix)
     return '%db' % b
