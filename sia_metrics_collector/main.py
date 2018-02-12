@@ -1,7 +1,12 @@
 #!/usr/bin/python2
 
 import argparse
+import datetime
 import logging
+import time
+
+import serialize
+import state
 
 logger = logging.getLogger(__name__)
 
@@ -20,11 +25,34 @@ def configure_logging():
 def main(args):
     configure_logging()
     logger.info('Started runnning')
-    logger.info('Finished successfully')
+    with open(args.output_file, 'a') as csv_file:
+        _poll_forever(args.poll_frequency, csv_file)
+
+
+def _poll_forever(frequency, csv_file):
+    builder = state.make_builder()
+    csv_serializer = serialize.CsvSerializer(csv_file)
+    while True:
+        poll_start = datetime.datetime.utcnow()
+        csv_serializer.write_state(builder.build())
+        _wait_until(poll_start + datetime.timedelta(seconds=frequency))
+
+
+def _wait_until(timestamp):
+    while datetime.datetime.utcnow() < timestamp:
+        time.sleep(0.5)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         prog='Sia Metrics Collector',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument(
+        '-f',
+        '--poll_frequency',
+        type=int,
+        default=60,
+        help='Frequency (in seconds) to poll metrics')
+    parser.add_argument(
+        '-o', '--output_file', help='Path to file to write metrics')
     main(parser.parse_args())
