@@ -77,5 +77,8 @@ if __name__ == '__main__':
         default=60,
         help='Frequency (in seconds) to poll metrics')
     parser.add_argument(
-        '-o', '--output_file', help='Path to file to write metrics')
+        '-o',
+        '--output_file',
+        required=True,
+        help='Path to file to write metrics')
     main(parser.parse_args())
