@@ -127,6 +127,8 @@ class StateBuilderTest(unittest.TestCase):
         }
         self.mock_sia_api.get_wallet.return_value = {
             u'confirmedsiacoinbalance': u'900',
+            u'unconfirmedoutgoingsiacoins': u'35',
+            u'unconfirmedincomingsiacoins': u'92',
         }
 
         self.assertSiaStateEqual(
@@ -135,7 +137,7 @@ class StateBuilderTest(unittest.TestCase):
                 contract_count=2,
                 file_count=3,
                 total_file_bytes=((900 * .9) + (800 * 1.0) + (100 * .9)),
-                total_contract_size=99,
+                total_contract_size=99L,
                 uploads_in_progress_count=2,
                 uploaded_bytes=155,
                 total_contract_spending=700000L,
@@ -145,6 +147,8 @@ class StateBuilderTest(unittest.TestCase):
                 remaining_renter_funds=5L,
                 storage_spending=7000L,
                 wallet_siacoin_balance=900L,
+                wallet_outgoing_siacoins=35L,
+                wallet_incoming_siacoins=92L,
                 api_latency=207.0), self.builder.build())
 
     def test_builds_partial_state_when_one_api_call_fails(self):
@@ -195,4 +199,6 @@ class StateBuilderTest(unittest.TestCase):
                 remaining_renter_funds=5L,
                 storage_spending=7000L,
                 wallet_siacoin_balance=900L,
+                wallet_outgoing_siacoins=35L,
+                wallet_incoming_siacoins=92L,
                 api_latency=207.0), self.builder.build())
