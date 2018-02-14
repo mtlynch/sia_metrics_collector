@@ -66,9 +66,9 @@ def _format_contract_count(contract_count):
 def _format_bytes(b):
     if b is None:
         return '  - '
-    unit_pairs = [(12, 'T'), (9, 'G'), (6, 'M'), (3, 'K'), (0, 'B')]
+    unit_pairs = [(40, 'T'), (30, 'G'), (20, 'M'), (10, 'K'), (0, 'B')]
     for magnitude, suffix in unit_pairs:
-        if b >= pow(10, magnitude):
-            return ('%3.3f%s' % ((float(b) / pow(10, magnitude)),
+        if b >= pow(2, magnitude):
+            return ('%3.3f%s' % ((float(b) / pow(2, magnitude)),
                                  suffix)).rjust(8)
     return '0'.rjust(8)
