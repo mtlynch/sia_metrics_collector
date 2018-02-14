@@ -56,20 +56,6 @@ def _is_empty_file(file_handle):
 
 
 def _state_to_dict(state):
-    return {
-        'timestamp': state.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
-        'contract_count': state.contract_count,
-        'total_contract_size': state.total_contract_size,
-        'file_count': state.file_count,
-        'total_file_bytes': state.total_file_bytes,
-        'uploads_in_progress_count': state.uploads_in_progress_count,
-        'uploaded_bytes': state.uploaded_bytes,
-        'total_contract_spending': state.total_contract_spending,
-        'contract_fee_spending': state.contract_fee_spending,
-        'storage_spending': state.storage_spending,
-        'upload_spending': state.upload_spending,
-        'download_spending': state.download_spending,
-        'remaining_renter_funds': state.remaining_renter_funds,
-        'wallet_siacoin_balance': state.wallet_siacoin_balance,
-        'api_latency': state.api_latency,
-    }
+    d = state.as_dict()
+    d['timestamp'] = state.timestamp.strftime('%Y-%m-%dT%H:%M:%S')
+    return d
