@@ -9,61 +9,6 @@ _DUMMY_START_TIMESTAMP = datetime.datetime(2018, 2, 12, 18, 5, 55, 0)
 _DUMMY_END_TIMESTAMP = datetime.datetime(2018, 2, 12, 18, 5, 55, 207000)
 
 
-class SiaStateTest(unittest.TestCase):
-
-    def test_equality(self):
-        a = state.SiaState(
-            timestamp=datetime.datetime(2018, 2, 11, 16, 5, 2),
-            contract_count=5,
-            total_contract_size=5000,
-            file_count=3,
-            total_file_bytes=500,
-            uploads_in_progress_count=2,
-            uploaded_bytes=900,
-            total_contract_spending=10000,
-            contract_fee_spending=25,
-            storage_spending=2,
-            upload_spending=35,
-            download_spending=0,
-            remaining_renter_funds=100,
-            wallet_siacoin_balance=75,
-            api_latency=5.0)
-        a_copy = state.SiaState(
-            timestamp=datetime.datetime(2018, 2, 11, 16, 5, 2),
-            contract_count=5,
-            total_contract_size=5000,
-            file_count=3,
-            total_file_bytes=500,
-            uploads_in_progress_count=2,
-            uploaded_bytes=900,
-            total_contract_spending=10000,
-            contract_fee_spending=25,
-            storage_spending=2,
-            upload_spending=35,
-            download_spending=0,
-            remaining_renter_funds=100,
-            wallet_siacoin_balance=75,
-            api_latency=5.0)
-        b = state.SiaState(
-            timestamp=datetime.datetime(2017, 10, 15, 12, 15, 56),
-            contract_count=1,
-            total_contract_size=4000,
-            file_count=9,
-            total_file_bytes=200,
-            uploads_in_progress_count=1,
-            uploaded_bytes=1800,
-            total_contract_spending=70000,
-            contract_fee_spending=22,
-            storage_spending=18,
-            upload_spending=9,
-            download_spending=2,
-            remaining_renter_funds=105,
-            wallet_siacoin_balance=85,
-            api_latency=85.0)
-        self.assertEqual(a, a_copy)
-        self.assertNotEqual(a, b)
-
-
 class StateBuilderTest(unittest.TestCase):
 
     def setUp(self):
@@ -81,36 +26,7 @@ class StateBuilderTest(unittest.TestCase):
         self.builder = state.Builder(self.mock_sia_api, self.mock_time_fn)
 
     def assertSiaStateEqual(self, a, b):
-        self.assertEqual(
-            {
-                'timestamp': a.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
-                'contract_count': a.contract_count,
-                'file_count': a.file_count,
-                'total_file_bytes': a.total_file_bytes,
-                'uploads_in_progress_count': a.uploads_in_progress_count,
-                'uploaded_bytes': a.uploaded_bytes,
-                'contract_fee_spending': a.contract_fee_spending,
-                'upload_spending': a.upload_spending,
-                'download_spending': a.download_spending,
-                'storage_spending': a.storage_spending,
-                'remaining_renter_funds': a.remaining_renter_funds,
-                'wallet_siacoin_balance': a.wallet_siacoin_balance,
-                'api_latency': a.api_latency,
-            }, {
-                'timestamp': b.timestamp.strftime('%Y-%m-%dT%H:%M:%S'),
-                'contract_count': b.contract_count,
-                'file_count': b.file_count,
-                'total_file_bytes': b.total_file_bytes,
-                'uploads_in_progress_count': b.uploads_in_progress_count,
-                'uploaded_bytes': b.uploaded_bytes,
-                'contract_fee_spending': b.contract_fee_spending,
-                'upload_spending': b.upload_spending,
-                'download_spending': b.download_spending,
-                'storage_spending': b.storage_spending,
-                'remaining_renter_funds': b.remaining_renter_funds,
-                'wallet_siacoin_balance': b.wallet_siacoin_balance,
-                'api_latency': b.api_latency,
-            })
+        self.assertEqual(a.as_dict(), b.as_dict())
 
     def test_builds_empty_state_when_all_api_calls_raise_exceptions(self):
         self.mock_sia_api.get_renter_contracts.side_effect = ValueError(
@@ -121,7 +37,7 @@ class StateBuilderTest(unittest.TestCase):
             'dummy get_wallet exception')
 
         self.assertSiaStateEqual(
-            state.SiaState(timestamp=_DUMMY_START_TIMESTAMP, api_latency=207.0),
+            state.SiaState(timestamp=_DUMMY_END_TIMESTAMP, api_latency=207.0),
             self.builder.build())
 
     def test_builds_empty_state_when_all_api_calls_return_errors(self):
@@ -136,7 +52,7 @@ class StateBuilderTest(unittest.TestCase):
         }
 
         self.assertSiaStateEqual(
-            state.SiaState(timestamp=_DUMMY_START_TIMESTAMP, api_latency=207.0),
+            state.SiaState(timestamp=_DUMMY_END_TIMESTAMP, api_latency=207.0),
             self.builder.build())
 
     def test_builds_zero_metrics_when_files_is_None(self):
@@ -151,7 +67,7 @@ class StateBuilderTest(unittest.TestCase):
 
         self.assertSiaStateEqual(
             state.SiaState(
-                timestamp=_DUMMY_START_TIMESTAMP,
+                timestamp=_DUMMY_END_TIMESTAMP,
                 contract_count=None,
                 file_count=0,
                 total_file_bytes=0,
@@ -215,7 +131,7 @@ class StateBuilderTest(unittest.TestCase):
 
         self.assertSiaStateEqual(
             state.SiaState(
-                timestamp=_DUMMY_START_TIMESTAMP,
+                timestamp=_DUMMY_END_TIMESTAMP,
                 contract_count=2,
                 file_count=3,
                 total_file_bytes=((900 * .9) + (800 * 1.0) + (100 * .9)),
@@ -259,13 +175,15 @@ class StateBuilderTest(unittest.TestCase):
         }
         self.mock_sia_api.get_wallet.return_value = {
             u'confirmedsiacoinbalance': u'900',
+            u'unconfirmedoutgoingsiacoins': u'35',
+            u'unconfirmedincomingsiacoins': u'92',
         }
 
         self.assertSiaStateEqual(
             state.SiaState(
-                timestamp=_DUMMY_START_TIMESTAMP,
+                timestamp=_DUMMY_END_TIMESTAMP,
                 contract_count=2,
-                total_contract_size=99,
+                total_contract_size=99L,
                 file_count=None,
                 total_file_bytes=None,
                 uploads_in_progress_count=None,
