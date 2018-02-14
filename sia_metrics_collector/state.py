@@ -200,7 +200,8 @@ class Builder(object):
             return
         for f in files:
             state.file_count += 1
-            state.total_file_bytes += long(f[u'filesize'])
+            state.total_file_bytes += long(f[u'filesize']) * (
+                f[u'uploadprogress'] / 100.0)
             state.uploaded_bytes += f[u'uploadedbytes']
             if f[u'uploadprogress'] < 100:
                 state.uploads_in_progress_count += 1
