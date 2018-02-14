@@ -8,8 +8,8 @@ logger = logging.getLogger(__name__)
 
 def print_header():
     print """
-time     latency uploaded #c  tot $     fees $    store $   u/l $     d/l $
--------- ------- -------- --- --------- --------- --------- --------- ---------
+time     latency uploaded  #c  tot $     fees $    store $   u/l $     d/l $
+-------- ------- --------- --- --------- --------- --------- --------- ---------
 """.strip()
 
 
@@ -69,6 +69,6 @@ def _format_bytes(b):
     unit_pairs = [(40, 'T'), (30, 'G'), (20, 'M'), (10, 'K'), (0, 'B')]
     for magnitude, suffix in unit_pairs:
         if b >= pow(2, magnitude):
-            return ('%3.3f%s' % ((float(b) / pow(2, magnitude)),
-                                 suffix)).rjust(8)
-    return '0'.rjust(8)
+            return ('%4.3f%s' % ((float(b) / pow(2, magnitude)),
+                                 suffix)).rjust(9)
+    return '0'.rjust(9)
