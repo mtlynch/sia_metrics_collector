@@ -45,16 +45,30 @@ Fields:
         download bandwidth.
     wallet_siacoin_balance: Current wallet balance of Siacoins (in
         hastings).
+    wallet_outgoing_siacoins: Unconfirmed outgoing Siacoins (in hastings).
+    wallet_incoming_siacoins: Unconfirmed incoming Siacoins (in hastings).
     api_latency: Time (in milliseconds) it took for Sia to respond to
         all API calls.
 """
 SiaState = recordtype.recordtype(
     'SiaState', [
-        'timestamp', 'contract_count', 'total_contract_size', 'file_count',
-        'total_file_bytes', 'uploads_in_progress_count', 'uploaded_bytes',
-        'total_contract_spending', 'contract_fee_spending', 'storage_spending',
-        'upload_spending', 'download_spending', 'remaining_renter_funds',
-        'wallet_siacoin_balance', 'api_latency'
+        'timestamp',
+        'contract_count',
+        'total_contract_size',
+        'file_count',
+        'total_file_bytes',
+        'uploads_in_progress_count',
+        'uploaded_bytes',
+        'total_contract_spending',
+        'contract_fee_spending',
+        'storage_spending',
+        'upload_spending',
+        'download_spending',
+        'remaining_renter_funds',
+        'wallet_siacoin_balance',
+        'wallet_outgoing_siacoins',
+        'wallet_incoming_siacoins',
+        'api_latency',
     ],
     default=None)
 SiaState.as_dict = SiaState._asdict
@@ -148,3 +162,7 @@ class Builder(object):
             return
         state.wallet_siacoin_balance = long(
             response[u'confirmedsiacoinbalance'])
+        state.wallet_outgoing_siacoins = long(
+            response[u'unconfirmedoutgoingsiacoins'])
+        state.wallet_incoming_siacoins = long(
+            response[u'unconfirmedincomingsiacoins'])

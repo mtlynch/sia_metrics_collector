@@ -24,10 +24,10 @@ class CsvSerializer(object):
             fieldnames=[
                 'timestamp',
                 'contract_count',
-                'total_contract_size',
                 'file_count',
-                'total_file_bytes',
                 'uploads_in_progress_count',
+                'total_contract_size',
+                'total_file_bytes',
                 'uploaded_bytes',
                 'total_contract_spending',
                 'contract_fee_spending',
@@ -36,6 +36,8 @@ class CsvSerializer(object):
                 'download_spending',
                 'remaining_renter_funds',
                 'wallet_siacoin_balance',
+                'wallet_outgoing_siacoins',
+                'wallet_incoming_siacoins',
                 'api_latency',
             ],
             lineterminator='\n')
