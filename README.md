@@ -81,7 +81,7 @@ Total amount of Siacoins (in hastings) spent on contracts, across all active con
 The following equality should always hold:
 
 ```
-total_contract_spending =
+total_contract_spending ==
   contract_fee_spending +
   storage_spending      +
   upload_spending       +
