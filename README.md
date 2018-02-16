@@ -32,6 +32,28 @@ I created a [Google Sheets template](https://docs.google.com/spreadsheets/d/1NS4
 
 To use, import the CSV that Sia Metrics Collector generates into Google Sheets. Then, in the "Data - Raw" sheet of the template, paste in the data from your CSV. This will automatically populate the data in the rest of the sheets and make the colorful graphs you see above.
 
+## Requirements
+
+* Python 2.7
+* A running Sia instance
+  * Currently, it must be running on the same machine and listening for API calls on its default API port, 9980.
+
+## Quick Start
+
+It's easy to get started with Sia Metrics Collector.
+
+```bash
+# Install Sia Metrics Collector.
+git clone https://github.com/mtlynch/sia_metrics_collector.git
+cd sia_metrics_collector
+pip install -r requirements.txt
+
+# Begin collecting metrics.
+python sia_metrics_collector\main.py \
+  --poll_frequency 60 \
+  --output_file "sia-metrics.csv"
+```
+
 ## Metrics
 
 ### `timestamp`
