@@ -15,15 +15,15 @@ The following graphs were all generated using the output of Sia Metrics Collecto
 
 ### Data Uploaded over Time
 
-[![Chart of data uploaded over time](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/data-uploaded-dev.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/data-uploaded-dev.png)
+[![Chart of data uploaded over time](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/graphs/data-uploaded-dev.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/graphs/data-uploaded-dev.png)
 
 ### Renter Spending over Time
 
-[![Chart of renter spending over time](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/renter-spending-dev.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/renter-spending-dev.png)
+[![Chart of renter spending over time](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/graphs/renter-spending-dev.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/graphs/renter-spending-dev.png)
 
 ### Upload Bandwidth over Time
 
-[![Chart of upload bandwidth over time](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/upload-bandwidth-dev.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/upload-bandwidth-dev.png)
+[![Chart of upload bandwidth over time](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/graphs/upload-bandwidth-dev.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/graphs/upload-bandwidth-dev.png)
 
 ## Google Sheets Template
 
