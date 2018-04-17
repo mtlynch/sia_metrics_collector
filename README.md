@@ -34,9 +34,15 @@ I created a [Google Sheets template](https://docs.google.com/spreadsheets/d/1ep-
 To use it:
 
 1. Open the [Sia Load Test Metrics - TEMPLATE](https://docs.google.com/spreadsheets/d/1ep-m_2K5hY9nF_D4TgKyGpp9arB6F3xPA7PJwQnskeg/edit?usp=sharing) document.
-1. Click File > Make a Copy: [![Screenshot of Make a Copy item](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import0.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import0.png)
-1. In the copy, click File > Import [![Screenshot of Import menu item](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import1.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import1.png)
+1. Click File > Make a Copy:
+
+    [![Screenshot of Make a Copy item](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import0.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import0.png)
+1. In the copy, click File > Import
+
+    [![Screenshot of Import menu item](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import1.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import1.png)
 1. Click the "Upload" tab, then click "Select a file from your computer"
+
+    [![Screenshot of Upload screen](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import2.png)](https://raw.githubusercontent.com/mtlynch/sia_metrics_collector/master/doc/screenshots/sheets-import2.png)
 1. Select the output CSV file from Sia Metrics Collector
 
 ## Requirements
