@@ -28,8 +28,7 @@ def main(args):
     configure_logging()
     logger.info('Started runnning')
     with _open_output_file(args.output_file) as csv_file:
-        _poll_forever(args.hostname, args.sia_port, args.poll_frequency,
-                      csv_file)
+        _poll_forever(args.hostname, args.port, args.poll_frequency, csv_file)
 
 
 def _open_output_file(output_path):
@@ -47,7 +46,7 @@ def _open_output_file(output_path):
 
 
 def _poll_forever(sia_hostname, sia_port, frequency, csv_file):
-    builder = state.make_builder()
+    builder = state.make_builder(sia_hostname, sia_port)
     csv_serializer = serialize.CsvSerializer(csv_file)
     next_poll_time = datetime.datetime.utcnow()
     for i in xrange(1000000000):
@@ -72,7 +71,6 @@ if __name__ == '__main__':
         prog='Sia Metrics Collector',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        '-h',
         '--hostname',
         default='http://localhost',
         help='Hostname of Sia node to poll for metrics')
