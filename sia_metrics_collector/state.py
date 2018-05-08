@@ -8,9 +8,9 @@ import pysia
 logger = logging.getLogger(__name__)
 
 
-def make_builder():
+def make_builder(sia_hostname, sia_port):
     """Makes a Builder using production mode defaults."""
-    return Builder(pysia.Sia(), datetime.datetime.utcnow)
+    return Builder(pysia.Sia(sia_hostname, sia_port), datetime.datetime.utcnow)
 
 
 """Represents a set of Sia metrics at a moment in time.
