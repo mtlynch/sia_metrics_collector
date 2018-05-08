@@ -1,0 +1,36 @@
+#!/bin/bash
+
+## Exit immediately on error.
+set -e
+
+# Echo to console.
+set -x
+
+IMAGE_NAME=sia-metrics-image
+CONTAINER_NAME=sia-metrics
+
+docker version
+
+# Remove any existing containers.
+docker rm -f "$CONTAINER_NAME" || true
+
+# Create image
+docker build \
+  --tag "$IMAGE_NAME" \
+  .
+
+METRICS_OUTPUT_DIR=$(mktemp -d)
+
+# Run container in detached state
+docker run \
+  --tty \
+  --detach \
+  --volume "${METRICS_OUTPUT_DIR}:/metrics-output" \
+  --env OUTPUT_FILE=/metrics-output/metrics.csv \
+  --name "$CONTAINER_NAME" \
+  "$IMAGE_NAME"
+
+docker exec "$CONTAINER_NAME" pip install -r dev_requirements.txt
+docker exec "$CONTAINER_NAME" ./build
+
+docker rm -f "$CONTAINER_NAME"
