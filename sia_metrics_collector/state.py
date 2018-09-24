@@ -115,8 +115,9 @@ class Builder(object):
             logger.error('Failed to query contracts information: %s',
                          json.dumps(response))
             return
-        contracts = response[u'contracts']
-        state.contract_count = len(contracts)
+        activeContracts = response[u'activecontracts']
+        inactiveContracts = response[u'inactivecontracts']
+        state.contract_count = len(activeContracts) + len(inactiveContracts)
         state.total_contract_size = 0
         state.total_contract_spending = 0
         state.contract_fee_spending = 0
@@ -124,7 +125,15 @@ class Builder(object):
         state.upload_spending = 0
         state.download_spending = 0
         state.remaining_renter_funds = 0
-        for contract in contracts:
+        for contract in activecontracts:
+            state.total_contract_size += long(contract[u'size'])
+            state.total_contract_spending += long(contract[u'totalcost'])
+            state.contract_fee_spending += long(contract[u'fees'])
+            state.storage_spending += long(contract[u'StorageSpending'])
+            state.upload_spending += long(contract[u'uploadspending'])
+            state.download_spending += long(contract[u'downloadspending'])
+            state.remaining_renter_funds += long(contract[u'renterfunds'])
+        for contract in inactivecontracts:
             state.total_contract_size += long(contract[u'size'])
             state.total_contract_spending += long(contract[u'totalcost'])
             state.contract_fee_spending += long(contract[u'fees'])
