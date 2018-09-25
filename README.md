@@ -66,6 +66,10 @@ python sia_metrics_collector\main.py \
   --output_file "sia-metrics.csv"
 ```
 
+## Development
+
+Interested in contributing code to this project? Great! See our [contributor's guide](https://github.com/mtlynch/sia_metrics_collector/blob/master/.github/CONTRIBUTING.md).
+
 ## Metrics
 
 ### `timestamp`
