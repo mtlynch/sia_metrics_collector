@@ -112,8 +112,6 @@ class Builder(object):
     def _populate_contract_metrics(self, state):
         response = self._sia_api.get_renter_contracts()
         if not response or not response.has_key(u'activecontracts'):
-            logger.error("response.has_key(u'activecontracts'): %s",
-                         json.dumps(response.has_key(u'activecontracts')))
             logger.error('Failed to query contracts information: %s',
                          json.dumps(response))
             return
