@@ -85,7 +85,7 @@ class StateBuilderTest(unittest.TestCase):
 
     def test_builds_full_state_when_all_api_calls_return_successfully(self):
         self.mock_sia_api.get_renter_contracts.return_value = {
-            u'contracts': [
+            u'activecontracts': [
                 {
                     u'totalcost': u'200000',
                     u'fees': u'10000',
@@ -103,6 +103,26 @@ class StateBuilderTest(unittest.TestCase):
                     u'downloadspending': u'10',
                     u'renterfunds': u'2',
                     u'size': 77,
+                },
+            ],
+            u'inactivecontracts': [
+                {
+                    u'totalcost': u'100000',
+                    u'fees': u'5000',
+                    u'StorageSpending': u'1000',
+                    u'uploadspending': u'400',
+                    u'downloadspending': u'30',
+                    u'renterfunds': u'1',
+                    u'size': 11,
+                },
+                {
+                    u'totalcost': u'250000',
+                    u'fees': u'35000',
+                    u'StorageSpending': u'2500',
+                    u'uploadspending': u'50',
+                    u'downloadspending': u'5',
+                    u'renterfunds': u'3',
+                    u'size': 33,
                 },
             ]
         }
@@ -134,18 +154,18 @@ class StateBuilderTest(unittest.TestCase):
         self.assertSiaStateEqual(
             state.SiaState(
                 timestamp=_DUMMY_END_TIMESTAMP,
-                contract_count=2,
+                contract_count=4,
                 file_count=3,
                 total_file_bytes=((900 * .9) + (800 * 1.0) + (100 * .9)),
-                total_contract_size=99L,
+                total_contract_size=143L,
                 uploads_in_progress_count=2,
                 uploaded_bytes=155,
-                total_contract_spending=700000L,
-                contract_fee_spending=80000L,
-                upload_spending=900L,
-                download_spending=70L,
-                remaining_renter_funds=5L,
-                storage_spending=7000L,
+                total_contract_spending=1050000L,
+                contract_fee_spending=120000L,
+                upload_spending=1350L,
+                download_spending=105L,
+                remaining_renter_funds=9L,
+                storage_spending=10500L,
                 wallet_siacoin_balance=900L,
                 wallet_outgoing_siacoins=35L,
                 wallet_incoming_siacoins=92L,
@@ -153,7 +173,7 @@ class StateBuilderTest(unittest.TestCase):
 
     def test_builds_partial_state_when_one_api_call_fails(self):
         self.mock_sia_api.get_renter_contracts.return_value = {
-            u'contracts': [
+            u'activecontracts': [
                 {
                     u'totalcost': u'200000',
                     u'fees': u'10000',
@@ -172,6 +192,26 @@ class StateBuilderTest(unittest.TestCase):
                     u'renterfunds': u'2',
                     u'size': 77,
                 },
+            ],
+            u'inactivecontracts': [
+                {
+                    u'totalcost': u'100000',
+                    u'fees': u'5000',
+                    u'StorageSpending': u'1000',
+                    u'uploadspending': u'400',
+                    u'downloadspending': u'30',
+                    u'renterfunds': u'1',
+                    u'size': 11,
+                },
+                {
+                    u'totalcost': u'250000',
+                    u'fees': u'35000',
+                    u'StorageSpending': u'2500',
+                    u'uploadspending': u'50',
+                    u'downloadspending': u'5',
+                    u'renterfunds': u'3',
+                    u'size': 33,
+                },
             ]
         }
         self.mock_sia_api.get_renter_files.return_value = {
@@ -186,18 +226,18 @@ class StateBuilderTest(unittest.TestCase):
         self.assertSiaStateEqual(
             state.SiaState(
                 timestamp=_DUMMY_END_TIMESTAMP,
-                contract_count=2,
-                total_contract_size=99L,
+                contract_count=4,
+                total_contract_size=143L,
                 file_count=None,
                 total_file_bytes=None,
                 uploads_in_progress_count=None,
                 uploaded_bytes=None,
-                total_contract_spending=700000L,
-                contract_fee_spending=80000L,
-                upload_spending=900L,
-                download_spending=70L,
-                remaining_renter_funds=5L,
-                storage_spending=7000L,
+                total_contract_spending=1050000L,
+                contract_fee_spending=120000L,
+                upload_spending=1350L,
+                download_spending=105L,
+                remaining_renter_funds=9L,
+                storage_spending=10500L,
                 wallet_siacoin_balance=900L,
                 wallet_outgoing_siacoins=35L,
                 wallet_incoming_siacoins=92L,
